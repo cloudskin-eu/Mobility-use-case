@@ -1,0 +1,40 @@
+Block:
+  InstanceId: 12345678-9012-3456-7890-123456789012
+
+placement:
+  site:
+    label: site01
+
+deployments:
+  torchserve:
+    variables:
+      appname: torchserve
+    configuration:
+      chart:
+        name: torchserve 
+        baseRegistryUrl: oci://registry-1.docker.io
+        repo: peiniliu
+        version: "0.2"
+    values:
+      torchserve_image: pytorch/torchserve:latest
+      torchserve:
+        name: resnet18
+        management_port: 8081
+        inference_port: 8080
+        metrics_port: 8082
+        pvd_mount: /home/model-server/shared
+        n_cpu: 1
+        memory_limit: 4Gi
+      optimization:
+        omp_num_threads: "1"
+        # omp_scheduler: "STATIC"
+        # omp_proc_bind: "CLOSE"
+        # gomp_cpu_affinity: "0-15"
+      deployment:
+        replicas: 1
+      service:
+        serviceType: NodePort # Default to LoadBalancer, can be overridden to NodePort
+      serviceMonitor:
+        enabled: true # Default to false, if enabled, the application exposes metrics to a Prometheus Server through the ServiceMonitor approach
+        labels: # Optional labels for ServiceMonitor, if any are required
+          release: prometheus # THe Prometheus helm release name is required

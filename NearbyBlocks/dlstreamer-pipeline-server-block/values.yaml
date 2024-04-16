@@ -1,0 +1,22 @@
+Block:
+  InstanceId: 12345678-9012-3456-7890-123456789012
+placement:
+  site:
+    label: site01
+
+deployments:
+  dlstreamer:
+    variables:
+      appname: dlstreamer
+    configuration:
+      chart:
+        repo:  https://yourregistry.com/chartrepo/cloudskin-apps
+        version: 0.0.1
+        name: dlstreamer-pipeline-server
+        auth:
+          enabled: true
+          username: your-username
+          password: "your-password"
+          secret:
+            name: chart-secret
+            key: secretKey

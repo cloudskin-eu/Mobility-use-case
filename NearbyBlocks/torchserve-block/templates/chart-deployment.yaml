@@ -1,0 +1,18 @@
+apiVersion: blocks/v1beta1
+kind: ChartDeployment
+metadata:
+  name: torchserve-deployment
+  namespace: {{ .Values.Block.InstanceId }}
+spec:
+  template:
+    metadata:
+      labels:
+        application: {{ .Values.deployments.torchserve.variables.appname }}-{{ .Values.Block.InstanceId }}
+    spec:
+      k8sClusterSelector:
+        matchLabels:
+          site.nbycomp.com/{{ .Values.placement.site.label }}: "true"
+      chart: {{ .Values.deployments.torchserve.configuration.chart.baseRegistryUrl }}/{{ .Values.deployments.torchserve.configuration.chart.repo }}/{{ .Values.deployments.torchserve.configuration.chart.name }}
+      version: {{ quote .Values.deployments.torchserve.configuration.chart.version }}
+      values: |
+{{ toYaml .Values.deployments.torchserve.values | indent 8 }}

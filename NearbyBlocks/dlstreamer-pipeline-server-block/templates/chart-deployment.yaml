@@ -1,0 +1,23 @@
+apiVersion: blocks/v1beta1
+kind: ChartDeployment
+metadata:
+  name: dlstreamer-deployment
+  namespace: {{ .Values.Block.InstanceId }}
+spec:
+  template:
+    metadata:
+      labels:
+        application: {{ .Values.deployments.dlstreamer.variables.appname }}-{{ .Values.Block.InstanceId }}
+    spec:
+      k8sClusterSelector:
+        matchLabels:
+          site.nbycomp.com/{{ .Values.placement.site.label }}: "true"
+      chart: {{ .Values.deployments.dlstreamer.configuration.chart.name }}
+      version: {{ .Values.deployments.dlstreamer.configuration.chart.version }}
+      repo:
+        url: {{ .Values.deployments.dlstreamer.configuration.chart.repo }}
+        username: {{ .Values.deployments.dlstreamer.configuration.chart.auth.username }}
+        password:
+          secretKeyRef:
+            name: {{ .Values.deployments.dlstreamer.configuration.chart.auth.secret.name }}
+            key: {{ .Values.deployments.dlstreamer.configuration.chart.auth.secret.key }}
